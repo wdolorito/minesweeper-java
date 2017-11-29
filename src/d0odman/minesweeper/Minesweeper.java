@@ -27,7 +27,7 @@ public class Minesweeper extends JFrame {
     }
     
     public Minesweeper() {
-        layout = new BorderLayout(0, 0);
+        layout = new BorderLayout();
         setLayout(layout);
         setBackground(MinePanel.BACKGROUND);
         getContentPane().add(minePanel, BorderLayout.CENTER);

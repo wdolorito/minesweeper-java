@@ -7,6 +7,7 @@ package d0odman.minesweeper.game;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
@@ -21,6 +22,7 @@ public abstract class Game {
     
     public Game() {
         setEdgeMines();
+        generateMineField();
     }
     
     public ArrayList<Integer> getMines() {
@@ -58,6 +60,19 @@ public abstract class Game {
             rightMines.add(i);
         }
     } // End setEdgeMines method
+    
+    private void generateMineField() {
+        int rando;
+        Random temp = new Random();
+        mines.clear();
+        while(mines.size() < getNumberOfMines()) {
+            rando = temp.nextInt(getBRC()) + 1;
+            
+            if(!mines.contains(rando)) {
+                mines.add(rando);
+            }
+        }
+    }
 
     // Get number of mines for this difficulty level
     abstract public int getNumberOfMines();

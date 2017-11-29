@@ -19,7 +19,7 @@ public class Expert extends Game {
                         ROWS = 16,
                         BRC = TRC * ROWS;
     
-    static final Dimension BOARD = new Dimension(TRC * 20,(ROWS * 20) + 60);
+    static final Dimension BOARD = new Dimension(TRC * 20 + 60, ROWS * 20 + 60);
 
     @Override
     public int getNumberOfMines() {

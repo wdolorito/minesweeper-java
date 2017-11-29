@@ -17,6 +17,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -46,16 +47,19 @@ public class MinePanel extends JPanel {
                         exploded;
 
     public MinePanel() {
-        currentGame = new Expert();
+        currentGame = new Novice();
         layout.setColumns(currentGame.getTRC());
         layout.setRows(currentGame.getRows());
-        setLayout(layout);
-        setMaximumSize(currentGame.getBoardSize());
-        setMinimumSize(currentGame.getBoardSize());
-        setPreferredSize(currentGame.getBoardSize());
-        setBackground(BACKGROUND);
+        initPanel();
         setTileIcons();
         initBoard();
+    }
+    
+    private void initPanel() {
+        setLayout(layout);
+        setPreferredSize(currentGame.getBoardSize());
+        setBackground(BACKGROUND);
+        setBorder(new EmptyBorder(30, 30, 30, 30));        
     }
     
     private void setTileIcons() {
@@ -70,23 +74,32 @@ public class MinePanel extends JPanel {
         empty = new ImageIcon(path + "empty.png");
         empty = new ImageIcon(empty.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         one = new ImageIcon(path + "1.png");
+        one = new ImageIcon(one.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         two = new ImageIcon(path + "2.png");
+        two = new ImageIcon(two.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         three = new ImageIcon(path + "3.png");
+        three = new ImageIcon(three.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         four = new ImageIcon(path + "4.png");
+        four = new ImageIcon(four.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         five = new ImageIcon(path + "5.png");
+        five = new ImageIcon(five.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         six = new ImageIcon(path + "6.png");
+        six = new ImageIcon(six.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         seven = new ImageIcon(path + "7.png");
+        seven = new ImageIcon(seven.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         eigth = new ImageIcon(path + "8.png");
+        eigth = new ImageIcon(eigth.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         flag = new ImageIcon(path + "flag.png");
+        flag = new ImageIcon(flag.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         bomb = new ImageIcon(path + "bomb.png");
+        bomb = new ImageIcon(bomb.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         exploded = new ImageIcon(path + "exploded.png");
+        exploded = new ImageIcon(exploded.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
     }
 
     private void initBoard() {
-        System.out.println(currentGame.getTRC());
-        System.out.println(currentGame.getRows());
-        int counter = currentGame.getTRC() * currentGame.getRows();
-        for(int i = 0; i < counter; i++) {
+        int counter = currentGame.getBLC();
+        for(int i = 1; i < counter; i++) {
             JButton tempButton = new JButton(initial);
             tempButton.setBackground(BACKGROUND);
             add(tempButton);
