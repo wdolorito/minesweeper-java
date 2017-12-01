@@ -31,6 +31,7 @@ public class MinePanel extends JPanel {
     private Game currentGame;
     private GridLayout layout = new GridLayout();
     private JButton[] mineField;
+    private String[] mines;
     
     private ImageIcon   initial,
                         empty,
@@ -59,7 +60,7 @@ public class MinePanel extends JPanel {
         setLayout(layout);
         setPreferredSize(currentGame.getBoardSize());
         setBackground(BACKGROUND);
-        setBorder(new EmptyBorder(30, 30, 30, 30));        
+        setBorder(new EmptyBorder(30, 30, 30, 30)); 
     }
     
     private void setTileIcons() {
@@ -98,11 +99,39 @@ public class MinePanel extends JPanel {
     }
 
     private void initBoard() {
+        mines = currentGame.getMines();
         int counter = currentGame.getBLC();
         for(int i = 0; i < counter; i++) {
-            JButton tempButton = new JButton(initial);
+            JButton tempButton = initButton(mines[i]);
             tempButton.setBackground(BACKGROUND);
             add(tempButton);
         }
+    }
+    
+    private JButton initButton(String val) {
+        JButton tempButton = new JButton(initial);
+        switch(val) {
+            case "m": tempButton = new JButton(bomb);
+                      break;
+            case "0": tempButton = new JButton(empty);
+                      break;
+            case "1": tempButton = new JButton(one);
+                      break;
+            case "2": tempButton = new JButton(two);
+                      break;
+            case "3": tempButton = new JButton(three);
+                      break;
+            case "4": tempButton = new JButton(four);
+                      break;
+            case "5": tempButton = new JButton(five);
+                      break;
+            case "6": tempButton = new JButton(six);
+                      break;
+            case "7": tempButton = new JButton(seven);
+                      break;
+            case "8": tempButton = new JButton(eigth);
+                      break;
+        }
+        return tempButton;
     }
 }

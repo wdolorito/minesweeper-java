@@ -27,11 +27,11 @@ public abstract class Game {
     public Game() {
         setEdgeMines();
         generateMines();
-        System.out.println(Arrays.toString(mines));
+        System.out.println(trc);
+        System.out.println(blc);
+        System.out.println(brc);
         System.out.println(leftMines);
-        System.out.println(leftMines.size());
         System.out.println(rightMines);
-        System.out.println(rightMines.size());
     }
     
     public String[] getMines() {
@@ -39,7 +39,8 @@ public abstract class Game {
     }
     
     protected void resetMines() {
-        mines = new String[getTRC() * getRows()];
+        mines = new String[(trc + 1) * getRows()];
+        System.out.println(mines.length);
     }
 
     // Method to set ArrayList variables associated with the mines on the edge
@@ -47,15 +48,15 @@ public abstract class Game {
     private void setEdgeMines() {
         leftMines = new ArrayList<>();
         rightMines = new ArrayList<>();
-        trc = getTRC();
-        blc = getBLC();
-        brc = getBRC();
+        trc = getTRC() - 1;
+        blc = getBLC() - 1;
+        brc = getBRC() - 1;
         
-        for(int i = trc; i < blc; i += trc) {
+        for(int i = trc + 1; i < blc; i += trc + 1) {
             leftMines.add(i);
         }
         
-        for(int i = trc - 1 + trc; i < brc - trc; i += trc) {
+        for(int i = trc + trc + 1; i < brc - trc; i += trc + 1) {
             rightMines.add(i);
         }
     } // End setEdgeMines method
@@ -91,7 +92,7 @@ public abstract class Game {
             }
 
             // Top edge mines:  check 5 surrounding tiles
-            if(tile > 1 && tile < trc) {
+            if(tile > 0 && tile < trc) {
                 if("m".equals(mines[tile - 1])) mineCounter++;
                 if("m".equals(mines[tile + 1])) mineCounter++;
                 if("m".equals(mines[tile + trc - 1])) mineCounter++;
@@ -137,7 +138,7 @@ public abstract class Game {
             }
 
             // Bottom right corner:  check 3 surrounding tiles
-            if(tile == getBRC()) {
+            if(tile == brc) {
                 if("m".equals(mines[tile - trc - 1])) mineCounter++;
                 if("m".equals(mines[tile - trc])) mineCounter++;
                 if("m".equals(mines[tile - 1])) mineCounter++;
