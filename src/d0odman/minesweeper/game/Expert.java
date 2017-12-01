@@ -15,9 +15,9 @@ import java.awt.Dimension;
 public class Expert extends Game {
     static final int    MINES = 99,
                         TRC = 30,
-                        BLC = TRC * (TRC -1) + 1,
                         ROWS = 16,
-                        BRC = TRC * ROWS;
+                        BRC = TRC * ROWS,
+                        BLC = BRC - TRC;
     
     static final Dimension BOARD = new Dimension(TRC * 20 + 60, ROWS * 20 + 60);
 
@@ -32,7 +32,7 @@ public class Expert extends Game {
     }
 
     @Override
-    public int getTRC() {
+    protected int getTRC() {
         return TRC;
     }
 
@@ -47,7 +47,7 @@ public class Expert extends Game {
     }
 
     @Override
-    public int getRows() {
+    protected int getRows() {
         return ROWS;
     }
 }

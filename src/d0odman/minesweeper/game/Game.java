@@ -7,6 +7,7 @@ package d0odman.minesweeper.game;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -16,61 +17,156 @@ import java.util.Random;
 
 public abstract class Game {
     // Minefield variables
-    protected ArrayList<Integer>    mines = new ArrayList<>(),
-                                    leftMines = new ArrayList<>(),
-                                    rightMines = new ArrayList<>();
+    protected String[]    mines;
+    protected ArrayList<Integer>    leftMines,
+                                    rightMines;
+    protected int   trc,
+                    blc,
+                    brc;
     
     public Game() {
         setEdgeMines();
-        generateMineField();
+        generateMines();
+        System.out.println(Arrays.toString(mines));
+        System.out.println(leftMines);
+        System.out.println(leftMines.size());
+        System.out.println(rightMines);
+        System.out.println(rightMines.size());
     }
     
-    public ArrayList<Integer> getMines() {
+    public String[] getMines() {
         return mines;
     }
     
-    protected ArrayList<Integer> getLeftMines() {
-        return leftMines;
-    }
-    
-    protected ArrayList<Integer> getRightMines() {
-        return rightMines;
-    }
-    
-    protected void setMine(int mine) {
-        if(!mines.contains(mine)) mines.add(mine);
-    }
-    
     protected void resetMines() {
-        mines.clear();
+        mines = new String[getTRC() * getRows()];
     }
 
     // Method to set ArrayList variables associated with the mines on the edge
     //  of the game board
     private void setEdgeMines() {
-        // Squares from 1 to blc non-inclusive and are multiples of trc belong
-        //  to leftEdgeMines
-        for(int i = getBLC() - getTRC(); i > 1; i -= getTRC()) {
+        leftMines = new ArrayList<>();
+        rightMines = new ArrayList<>();
+        trc = getTRC();
+        blc = getBLC();
+        brc = getBRC();
+        
+        for(int i = trc; i < blc; i += trc) {
             leftMines.add(i);
         }
-
-        // Squares from trc to brc non-inclusive and are multiples of trc belong
-        //  to rightEdgeMines
-        for(int i = getTRC(); i < getBRC(); i += getTRC()) {
+        
+        for(int i = trc - 1 + trc; i < brc - trc; i += trc) {
             rightMines.add(i);
         }
     } // End setEdgeMines method
     
-    private void generateMineField() {
+    private void generateMines() {
         int rando;
         Random temp = new Random();
-        mines.clear();
-        while(mines.size() < getNumberOfMines()) {
-            rando = temp.nextInt(getBRC()) + 1;
-            
-            if(!mines.contains(rando)) {
-                mines.add(rando);
+        resetMines();
+        for(int i = 0; i < getNumberOfMines(); i++) {
+            rando = temp.nextInt(brc);
+            if(!"m".equals(mines[rando])) {
+                mines[rando] = "m";
+            } else {
+                i--;
             }
+        }
+        for(int i = 0; i < mines.length; i++) {
+            checkTile(i);
+        }
+    }
+
+    private void checkTile(int tile) {
+        if(!"m".equals(mines[tile])) {
+            int mineCounter = 0;
+            boolean checked = false;
+
+            // Top left corner:  check 3 surrounding tiles
+            if(tile == 0) {
+                if("m".equals(mines[tile + 1])) mineCounter++;
+                if("m".equals(mines[tile + trc])) mineCounter++;
+                if("m".equals(mines[tile + trc + 1])) mineCounter++;
+                checked = true;
+            }
+
+            // Top edge mines:  check 5 surrounding tiles
+            if(tile > 1 && tile < trc) {
+                if("m".equals(mines[tile - 1])) mineCounter++;
+                if("m".equals(mines[tile + 1])) mineCounter++;
+                if("m".equals(mines[tile + trc - 1])) mineCounter++;
+                if("m".equals(mines[tile + trc])) mineCounter++;
+                if("m".equals(mines[tile + trc + 1])) mineCounter++;
+                checked = true;
+            }
+
+            // Top right corner:  check 3 surrounding tiles
+            if(tile == trc) {
+                if("m".equals(mines[tile - 1])) mineCounter++;
+                if("m".equals(mines[tile + trc - 1])) mineCounter++;
+                if("m".equals(mines[tile + trc])) mineCounter++;
+                checked = true;
+            }
+
+            // Left edge mines:  check 5 surrounding tiles
+            if(leftMines.contains(tile)) {
+                if("m".equals(mines[tile - trc])) mineCounter++;
+                if("m".equals(mines[tile - trc + 1])) mineCounter++;
+                if("m".equals(mines[tile + 1])) mineCounter++;
+                if("m".equals(mines[tile + trc])) mineCounter++;
+                if("m".equals(mines[tile + trc + 1])) mineCounter++;
+                checked = true;
+            }
+
+            // Bottom left corner:  check 3 surrounding tiles
+            if(tile == blc) {
+                if("m".equals(mines[tile - trc])) mineCounter++;
+                if("m".equals(mines[tile - trc + 1])) mineCounter++;
+                if("m".equals(mines[tile + 1])) mineCounter++;
+                checked = true;
+            }
+
+            // Bottom edge mines:  check 5 surrounding tiles
+            if(tile > blc && tile < brc) {
+                if("m".equals(mines[tile - trc - 1])) mineCounter++;
+                if("m".equals(mines[tile - trc])) mineCounter++;
+                if("m".equals(mines[tile - trc + 1])) mineCounter++;
+                if("m".equals(mines[tile - 1])) mineCounter++;
+                if("m".equals(mines[tile + 1])) mineCounter++;
+                checked = true;
+            }
+
+            // Bottom right corner:  check 3 surrounding tiles
+            if(tile == getBRC()) {
+                if("m".equals(mines[tile - trc - 1])) mineCounter++;
+                if("m".equals(mines[tile - trc])) mineCounter++;
+                if("m".equals(mines[tile - 1])) mineCounter++;
+                checked = true;
+            }
+
+            // Right edge mines:  check 5 surrounding tiles
+            if(rightMines.contains(tile)) {
+                if("m".equals(mines[tile - trc - 1])) mineCounter++;
+                if("m".equals(mines[tile - trc])) mineCounter++;
+                if("m".equals(mines[tile - 1])) mineCounter++;
+                if("m".equals(mines[tile + trc - 1])) mineCounter++;
+                if("m".equals(mines[tile + trc])) mineCounter++;
+                checked = true;
+            }
+
+            //  Everywhere else:  check 8 surrounding tiles
+            if(!checked) {
+                if("m".equals(mines[tile - trc - 1])) mineCounter++;
+                if("m".equals(mines[tile - trc])) mineCounter++;
+                if("m".equals(mines[tile - trc + 1])) mineCounter++;
+                if("m".equals(mines[tile - 1])) mineCounter++;
+                if("m".equals(mines[tile + 1])) mineCounter++;
+                if("m".equals(mines[tile + trc - 1])) mineCounter++;
+                if("m".equals(mines[tile + trc])) mineCounter++;
+                if("m".equals(mines[tile + trc + 1])) mineCounter++;
+            }
+
+            mines[tile] = Integer.toString(mineCounter);
         }
     }
 
@@ -81,7 +177,7 @@ public abstract class Game {
     abstract public Dimension getBoardSize();
 
     // Get top right corner of mine field
-    abstract public int getTRC();
+    abstract protected int getTRC();
 
     // Get bottom left corner of mine field
     abstract public int getBLC();
@@ -90,5 +186,5 @@ public abstract class Game {
     abstract protected int getBRC();
 
     // Get rows of mine field
-    abstract public int getRows();
+    abstract protected int getRows();
 }

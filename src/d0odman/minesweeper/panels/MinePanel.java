@@ -48,8 +48,8 @@ public class MinePanel extends JPanel {
 
     public MinePanel() {
         currentGame = new Novice();
-        layout.setColumns(currentGame.getTRC());
-        layout.setRows(currentGame.getRows());
+        layout.setColumns(9);
+        layout.setRows(9);
         initPanel();
         setTileIcons();
         initBoard();
@@ -99,7 +99,7 @@ public class MinePanel extends JPanel {
 
     private void initBoard() {
         int counter = currentGame.getBLC();
-        for(int i = 1; i < counter; i++) {
+        for(int i = 0; i < counter; i++) {
             JButton tempButton = new JButton(initial);
             tempButton.setBackground(BACKGROUND);
             add(tempButton);
