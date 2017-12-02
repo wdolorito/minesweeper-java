@@ -149,14 +149,6 @@ public abstract class Game {
 
             // Right edge mines:  check 5 surrounding tiles
             if(rightMines.contains(tile)) {
-                if(tile == 449) {
-                    System.out.println("===");
-                    System.out.println(tile - trc - 2);
-                    System.out.println(tile - trc - 1);
-                    System.out.println(tile - 1);
-                    System.out.println(tile + trc);
-                    System.out.println(tile + trc + 1);
-                }
                 if("m".equals(mines[tile - trc - 2])) mineCounter++;
                 if("m".equals(mines[tile - trc - 1])) mineCounter++;
                 if("m".equals(mines[tile - 1])) mineCounter++;

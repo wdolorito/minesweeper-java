@@ -17,7 +17,7 @@ public class Expert extends Game {
                         TRC = 30,
                         ROWS = 16,
                         BRC = TRC * ROWS,
-                        BLC = BRC - TRC;
+                        BLC = BRC - TRC + 1;
     
     static final Dimension BOARD = new Dimension(TRC * 20 + 60, ROWS * 20 + 60);
 

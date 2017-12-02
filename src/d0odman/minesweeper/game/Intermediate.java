@@ -17,7 +17,7 @@ public class Intermediate extends Game {
                         TRC = 16,
                         ROWS = TRC,
                         BRC = TRC * ROWS,
-                        BLC = BRC - TRC;
+                        BLC = BRC - TRC + 1;
     
     static final Dimension BOARD = new Dimension(TRC * 20 + 60, ROWS * 20 + 60);
 
