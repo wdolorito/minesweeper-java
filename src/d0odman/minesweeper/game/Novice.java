@@ -32,7 +32,7 @@ public class Novice extends Game {
     }
 
     @Override
-    protected int getTRC() {
+    public int getTRC() {
         return TRC;
     }
 
@@ -47,7 +47,7 @@ public class Novice extends Game {
     }
 
     @Override
-    protected int getRows() {
+    public int getRows() {
         return ROWS;
     }
 }

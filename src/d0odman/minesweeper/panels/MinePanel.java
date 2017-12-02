@@ -10,8 +10,6 @@ import d0odman.minesweeper.game.Novice;
 import d0odman.minesweeper.game.Intermediate;
 import d0odman.minesweeper.game.Expert;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -29,7 +27,7 @@ public class MinePanel extends JPanel {
     public static final Color BACKGROUND = new Color(0xE5, 0xE5, 0xE5);
     
     private Game currentGame;
-    private GridLayout layout = new GridLayout();
+    private GridLayout layout;
     private JButton[] mineField;
     private String[] mines;
     
@@ -48,9 +46,10 @@ public class MinePanel extends JPanel {
                         exploded;
 
     public MinePanel() {
-        currentGame = new Novice();
-        layout.setColumns(9);
-        layout.setRows(9);
+        currentGame = new Expert();
+        layout = new GridLayout();
+        layout.setColumns(currentGame.getTRC());
+        layout.setRows(currentGame.getRows());
         initPanel();
         setTileIcons();
         initBoard();

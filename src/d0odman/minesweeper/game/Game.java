@@ -7,7 +7,6 @@ package d0odman.minesweeper.game;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -23,6 +22,8 @@ public abstract class Game {
     protected int   trc,
                     blc,
                     brc;
+    
+    protected boolean solved = false;
     
     public Game() {
         setEdgeMines();
@@ -148,6 +149,14 @@ public abstract class Game {
 
             // Right edge mines:  check 5 surrounding tiles
             if(rightMines.contains(tile)) {
+                if(tile == 449) {
+                    System.out.println("===");
+                    System.out.println(tile - trc - 2);
+                    System.out.println(tile - trc - 1);
+                    System.out.println(tile - 1);
+                    System.out.println(tile + trc);
+                    System.out.println(tile + trc + 1);
+                }
                 if("m".equals(mines[tile - trc - 2])) mineCounter++;
                 if("m".equals(mines[tile - trc - 1])) mineCounter++;
                 if("m".equals(mines[tile - 1])) mineCounter++;
@@ -179,7 +188,7 @@ public abstract class Game {
     abstract public Dimension getBoardSize();
 
     // Get top right corner of mine field
-    abstract protected int getTRC();
+    abstract public int getTRC();
 
     // Get bottom left corner of mine field
     abstract public int getBLC();
@@ -188,5 +197,5 @@ public abstract class Game {
     abstract protected int getBRC();
 
     // Get rows of mine field
-    abstract protected int getRows();
+    abstract public int getRows();
 }
