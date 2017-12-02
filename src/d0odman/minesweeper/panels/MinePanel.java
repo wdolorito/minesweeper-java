@@ -100,8 +100,7 @@ public class MinePanel extends JPanel {
 
     private void initBoard() {
         mines = currentGame.getMines();
-        int counter = currentGame.getBLC();
-        for(int i = 0; i < counter; i++) {
+        for(int i = 0; i < mines.length; i++) {
             JButton tempButton = initButton(mines[i]);
             tempButton.setBackground(BACKGROUND);
             add(tempButton);
