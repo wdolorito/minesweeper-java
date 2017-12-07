@@ -22,23 +22,23 @@ public abstract class Game {
     protected int   trc,
                     blc,
                     brc;
-    
-    protected boolean solved = false;
-    
+
+    protected boolean solved;
+
     public Game() {
+        setSolved(false);
         setEdgeMines();
         generateMines();
-        System.out.println(trc);
-        System.out.println(blc);
-        System.out.println(brc);
-        System.out.println(leftMines);
-        System.out.println(rightMines);
     }
-    
+
     public String[] getMines() {
         return mines;
     }
-    
+
+    protected void setSolved(boolean b) {
+        solved = b;
+    }
+
     protected void resetMines() {
         mines = new String[(trc + 1) * getRows()];
         System.out.println("New mines");
@@ -53,16 +53,16 @@ public abstract class Game {
         trc = getTRC() - 1;
         blc = getBLC() - 1;
         brc = getBRC() - 1;
-        
+
         for(int i = trc + 1; i < blc; i += trc + 1) {
             leftMines.add(i);
         }
-        
+
         for(int i = trc + trc + 1; i < brc - trc; i += trc + 1) {
             rightMines.add(i);
         }
     } // End setEdgeMines method
-    
+
     private void generateMines() {
         int rando;
         Random temp = new Random();

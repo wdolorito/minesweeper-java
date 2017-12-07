@@ -5,6 +5,9 @@
  */
 package d0odman.minesweeper.panels;
 
+import d0odman.minesweeper.Minesweeper;
+import java.awt.BorderLayout;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 /**
@@ -13,4 +16,18 @@ import javax.swing.JPanel;
  */
 
 public class MenuPanel extends JPanel {
+    final private String[] gameDiff = {"Novice",
+                                       "Intermediate",
+                                       "Expert" };
+    final private MinePanel minePanel;
+    final private BorderLayout layout;
+    final private JComboBox diff;
+    
+    public MenuPanel(MinePanel minePanel) {
+        this.minePanel = minePanel;
+        layout = new BorderLayout();
+        setBackground(Minesweeper.BACKGROUND);
+        diff = new JComboBox(gameDiff);
+        add(diff, BorderLayout.EAST);
+    }
 }

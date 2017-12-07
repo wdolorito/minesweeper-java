@@ -5,8 +5,10 @@
  */
 package d0odman.minesweeper;
 
+import d0odman.minesweeper.panels.MenuPanel;
 import d0odman.minesweeper.panels.MinePanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import javax.swing.JFrame;
 
 /**
@@ -15,21 +17,25 @@ import javax.swing.JFrame;
  */
 
 public class Minesweeper extends JFrame {
-    private static final MinePanel minePanel = new MinePanel();
-    private BorderLayout layout;
-    
+    // Static variable declarations
+    final public static Color BACKGROUND = new Color(0xE5, 0xE5, 0xE5);
+    final private static MinePanel minePanel = new MinePanel();
+    final private static MenuPanel menuPanel = new MenuPanel(minePanel);
+    final private BorderLayout layout;
+
     public static void main(String[] args) {
         Minesweeper game = new Minesweeper();
         game.setTitle("Minesweeper!!!!!!");
         game.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        game.setBackground(minePanel.getBackground());
+        game.setBackground(BACKGROUND);
         game.setVisible(true);
     }
-    
+
     public Minesweeper() {
         layout = new BorderLayout();
         setLayout(layout);
-        setBackground(MinePanel.BACKGROUND);
+        setBackground(BACKGROUND);
+        getContentPane().add(menuPanel, BorderLayout.NORTH);
         getContentPane().add(minePanel, BorderLayout.CENTER);
         setResizable(false);
         pack();
