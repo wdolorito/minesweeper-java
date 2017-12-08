@@ -27,7 +27,7 @@ import javax.swing.border.EmptyBorder;
 public class MinePanel extends JPanel {
     private Game currentGame;
     private GridLayout layout;
-    private JButton[][] mineField;
+    private JButton[] mineField;
     private String[] mines;
 
     private ImageIcon   initial,
@@ -124,7 +124,7 @@ public class MinePanel extends JPanel {
 
     private void initBoard() {
         mines = currentGame.getMines();
-        mineField = new JButton[2][mines.length + 1];
+        mineField = new JButton[mines.length + 1];
         for(int i = 0; i < mines.length; i++) {
             JButton tempButton = new JButton(initial);
             tempButton.putClientProperty("id", i);
@@ -134,16 +134,14 @@ public class MinePanel extends JPanel {
                     int buttonIndex = (int) ((JButton) e.getSource())
                                         .getClientProperty("id");
                     switch(e.getButton()) {
-                        case 1: System.out.println("left click");
+                        case 1: doLeftClick(buttonIndex);
                                 break;
-                        case 3: System.out.println("right click");
-                                mineField[0][buttonIndex].setIcon(flag);
+                        case 3: doRightClick(buttonIndex);
                                 break;
                         default: System.out.println("we don't use this button");
+                                 System.out.println(e.getButton());
                                  break;
                     }
-                    
-                    System.out.println(buttonIndex);
                 }
 
                 @Override
@@ -162,38 +160,48 @@ public class MinePanel extends JPanel {
                 public void mouseExited(MouseEvent e) {
                 }
             });
-            mineField[0][i] = tempButton;
-            tempButton = initButton(mines[i]);
-            tempButton.setBackground(Minesweeper.BACKGROUND);
-            mineField[1][i] = tempButton;
-            add(mineField[0][i]);
+            add(tempButton);
         }
     }
+    
+    private void doLeftClick(int buttonIndex) {
+        System.out.println("left click");
+        System.out.println(buttonIndex);
+    }
+    
+    private void doRightClick(int buttonIndex) {
+        System.out.println("right click");
+        System.out.println(buttonIndex);
+    }
 
-    private JButton initButton(String val) {
-        JButton tempButton = new JButton(initial);
+    private ImageIcon getImageIcon(String val) {
+        ImageIcon tempIcon = initial;
         switch(val) {
-            case "m": tempButton = new JButton(bomb);
+            case "m": tempIcon = bomb;
                       break;
-            case "0": tempButton = new JButton(empty);
+            case "0": tempIcon = empty;
                       break;
-            case "1": tempButton = new JButton(one);
+            case "1": tempIcon = one;
                       break;
-            case "2": tempButton = new JButton(two);
+            case "2": tempIcon = two;
                       break;
-            case "3": tempButton = new JButton(three);
+            case "3": tempIcon = three;
                       break;
-            case "4": tempButton = new JButton(four);
+            case "4": tempIcon = four;
                       break;
-            case "5": tempButton = new JButton(five);
+            case "5": tempIcon = five;
                       break;
-            case "6": tempButton = new JButton(six);
+            case "6": tempIcon = six;
                       break;
-            case "7": tempButton = new JButton(seven);
+            case "7": tempIcon = seven;
                       break;
-            case "8": tempButton = new JButton(eigth);
+            case "8": tempIcon = eigth;
                       break;
         }
-        return tempButton;
+        return tempIcon;
+    }
+    
+    public int getNumMines() {
+        return currentGame.getNumberOfMines();
     }
 }

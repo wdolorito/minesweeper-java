@@ -41,8 +41,6 @@ public abstract class Game {
 
     protected void resetMines() {
         mines = new String[(trc + 1) * getRows()];
-        System.out.println("New mines");
-        System.out.println(mines.length);
     }
 
     // Method to set ArrayList variables associated with the mines on the edge

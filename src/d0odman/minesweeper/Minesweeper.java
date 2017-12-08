@@ -19,8 +19,8 @@ import javax.swing.JFrame;
 public class Minesweeper extends JFrame {
     // Static variable declarations
     final public static Color BACKGROUND = new Color(0xE5, 0xE5, 0xE5);
-    final private static MinePanel minePanel = new MinePanel();
-    final private static MenuPanel menuPanel = new MenuPanel(minePanel);
+    final private MinePanel minePanel = new MinePanel();
+    final private MenuPanel menuPanel = new MenuPanel(minePanel);
     final private BorderLayout layout;
 
     public static void main(String[] args) {
