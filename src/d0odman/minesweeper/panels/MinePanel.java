@@ -25,10 +25,11 @@ import javax.swing.border.EmptyBorder;
  */
 
 public class MinePanel extends JPanel {
-    private Game currentGame;
-    private GridLayout layout;
+    final private Game currentGame;
+    final private GridLayout layout;
     private JButton[] mineField;
     private String[] mines;
+    private int unflaggedMines;
 
     private ImageIcon   initial,
                         empty,
@@ -125,9 +126,11 @@ public class MinePanel extends JPanel {
     private void initBoard() {
         mines = currentGame.getMines();
         mineField = new JButton[mines.length + 1];
+        unflaggedMines = currentGame.getNumberOfMines();
         for(int i = 0; i < mines.length; i++) {
             JButton tempButton = new JButton(initial);
             tempButton.putClientProperty("id", i);
+            tempButton.putClientProperty("state", "initial");
             tempButton.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -160,6 +163,7 @@ public class MinePanel extends JPanel {
                 public void mouseExited(MouseEvent e) {
                 }
             });
+            mineField[i] = tempButton;
             add(tempButton);
         }
     }
@@ -170,8 +174,27 @@ public class MinePanel extends JPanel {
     }
     
     private void doRightClick(int buttonIndex) {
+        String state = (String) mineField[buttonIndex].getClientProperty("state");
         System.out.println("right click");
+        System.out.println(unflaggedMines);
         System.out.println(buttonIndex);
+        if ("initial".equals(state)) {
+            if(unflaggedMines != 1) {
+                mineField[buttonIndex].putClientProperty("state", "flag");
+                mineField[buttonIndex].setIcon(flag);
+            }
+            unflaggedMines--;
+            if(unflaggedMines < 1) unflaggedMines = 1; 
+        } else {
+            int numMines = currentGame.getNumberOfMines();
+            if(unflaggedMines < numMines) {
+                mineField[buttonIndex].putClientProperty("state", "initial");
+                mineField[buttonIndex].setIcon(initial);
+            }
+            unflaggedMines++;
+            if(unflaggedMines > numMines) unflaggedMines = numMines;
+        }
+        System.out.println(mineField[buttonIndex].getClientProperty("state"));
     }
 
     private ImageIcon getImageIcon(String val) {
@@ -203,5 +226,9 @@ public class MinePanel extends JPanel {
     
     public int getNumMines() {
         return currentGame.getNumberOfMines();
+    }
+    
+    public int getUnflaggedMines() {
+        return unflaggedMines;
     }
 }

@@ -26,22 +26,27 @@ public class MenuPanel extends JPanel {
     final private MinePanel minePanel;
     final private BorderLayout layout;
     final private JComboBox<String> diff;
-    private JLabel minesRem;
-    private JLabel timer;
-    private Timer gameTimer;
+    final private JLabel minesRem;
+    final private JLabel timer;
+    private int timerDisp;
+    final private Timer gameTimer;
 
     public MenuPanel(MinePanel minePanel) {
         this.minePanel = minePanel;
         layout = new BorderLayout();
         setBackground(Minesweeper.BACKGROUND);
-        timer = new JLabel();
-        resetTimer();
+        timer = new JLabel("0");
+        gameTimer = new Timer(1000, (ActionEvent e) -> {
+            timerDisp++;
+            timer.setText(Integer.toString(timerDisp));
+        });
         add(timer, BorderLayout.WEST);
         minesRem = new JLabel();
-        setMinesRem(this.minePanel.getNumMines());
+        setMinesRem(this.minePanel.getUnflaggedMines());
         add(minesRem, BorderLayout.CENTER);
         diff = new JComboBox<>(gameDiff);
         add(diff, BorderLayout.EAST);
+        resetTimer();
     }
 
     private void setMinesRem(int i) {
@@ -49,12 +54,11 @@ public class MenuPanel extends JPanel {
     }
 
     private void resetTimer() {
-        gameTimer = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                timer.setText(Long.toString(System.currentTimeMillis()));
-            }
-        });
+        timerDisp = 0;
         gameTimer.start();
+    }
+    
+    private void stopTimer() {
+        gameTimer.stop();
     }
 }
