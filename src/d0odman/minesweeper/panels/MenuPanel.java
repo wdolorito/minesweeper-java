@@ -8,6 +8,7 @@ package d0odman.minesweeper.panels;
 import d0odman.minesweeper.Minesweeper;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,8 +41,16 @@ public class MenuPanel extends JPanel {
         });
         add(timer, BorderLayout.WEST);
         diff = new JComboBox<>(gameDiff);
+        diff.addActionListener((ActionEvent e) -> {
+            JComboBox box = (JComboBox) e.getSource();
+            restartGame((String) box.getSelectedItem());
+        });
         add(diff, BorderLayout.EAST);
-        resetTimer();
+    }
+    
+    private void restartGame(String difficulty) {
+        minePanel.newGame(difficulty);
+        System.out.println(difficulty);
     }
 
     public void setMinePanel(MinePanel minePanel) {

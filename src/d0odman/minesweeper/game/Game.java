@@ -22,7 +22,8 @@ public abstract class Game {
     protected ArrayList<Integer>    topMines,
                                     leftMines,
                                     rightMines,
-                                    bottomMines;
+                                    bottomMines,
+                                    solution;
     protected int   trc,
                     blc,
                     brc;
@@ -69,18 +70,10 @@ public abstract class Game {
         for(int i = blc + 1; i < brc; i++) {
             bottomMines.add(i);
         }
-
-        System.out.println(0);
-        System.out.println(topMines);
-        System.out.println(trc);
-        System.out.println(leftMines);
-        System.out.println(rightMines);
-        System.out.println(blc);
-        System.out.println(bottomMines);
-        System.out.println(brc);
     } // End setEdgeMines method
 
     private void generateMines() {
+        solution = new ArrayList<>();
         int rando;
         Random temp = new Random();
         resetMines();
@@ -88,13 +81,19 @@ public abstract class Game {
             rando = temp.nextInt(brc);
             if(!"m".equals(mines[rando])) {
                 mines[rando] = "m";
+                solution.add(rando);
             } else {
                 i--;
             }
+            Collections.sort(solution);
         }
         for(int i = 0; i < mines.length; i++) {
             checkTile(i);
         }
+    }
+    
+    public List<Integer> returnSolution() {
+        return Collections.unmodifiableList(solution);
     }
 
     public List<Integer> returnCheckMines(int tile) {

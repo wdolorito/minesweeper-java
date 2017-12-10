@@ -14,11 +14,12 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -27,12 +28,15 @@ import javax.swing.border.EmptyBorder;
  */
 
 public class MinePanel extends JPanel {
-    final private Game currentGame;
+    private JFrame mainWindow;
     final private GridLayout layout;
+    private Game currentGame;
+    private List<Integer> solution;
     private MenuPanel menuPanel;
     private JButton[] mineField;
     private String[] mines;
     private int unflaggedMines;
+    private boolean gameRunning;
 
     private ImageIcon   initial,
                         empty,
@@ -48,14 +52,12 @@ public class MinePanel extends JPanel {
                         bomb,
                         exploded;
 
-    public MinePanel() {
-        currentGame = new Novice();
+    public MinePanel(JFrame mainWindow) {
+        this.mainWindow = mainWindow;
         layout = new GridLayout();
-        layout.setColumns(currentGame.getTRC());
-        layout.setRows(currentGame.getRows());
-        initPanel();
         setTileIcons();
-        initBoard();
+        newGame();
+        initPanel();
     }
 
     public void setMenuPanel(MenuPanel menuPanel) {
@@ -63,6 +65,8 @@ public class MinePanel extends JPanel {
     }
 
     private void initPanel() {
+        layout.setColumns(currentGame.getTRC());
+        layout.setRows(currentGame.getRows());
         setLayout(layout);
         setPreferredSize(currentGame.getBoardSize());
         setBackground(Minesweeper.BACKGROUND);
@@ -176,6 +180,10 @@ public class MinePanel extends JPanel {
     }
 
     private void doLeftClick(int buttonIndex) {
+        if(!gameRunning) {
+            gameRunning = true;
+            menuPanel.resetTimer();
+        }
         String state = (String) mineField[buttonIndex].getClientProperty("state");
         System.out.println("left click");
         System.out.println(buttonIndex);
@@ -199,6 +207,10 @@ public class MinePanel extends JPanel {
     }
 
     private void doRightClick(int buttonIndex) {
+        if(!gameRunning) {
+            gameRunning = true;
+            menuPanel.resetTimer();
+        }
         String state = (String) mineField[buttonIndex].getClientProperty("state");
         if ("initial".equals(state)) {
             if(unflaggedMines != 0) {
@@ -222,7 +234,9 @@ public class MinePanel extends JPanel {
     }
 
     private void validateGame() {
-
+        for(JButton button: mineField) {
+            System.out.println(button.getClientProperty("state"));
+        }
     }
 
     private void endGame(int buttonIndex) {
@@ -233,7 +247,32 @@ public class MinePanel extends JPanel {
             add(tempButton);
         }
         revalidate();
+        gameRunning = false;
         menuPanel.stopTimer();
+    }
+    
+    private void newGame() {
+        newGame("Novice");
+    }
+    
+    public void newGame(String difficulty) {
+        mainWindow.setResizable(true);
+        removeAll();
+        switch(difficulty) {
+            case "Intermediate": currentGame = new Intermediate();
+                                 break;
+            case "Expert": currentGame = new Expert();
+                           break;
+            default: currentGame = new Novice();
+                     break;
+        }
+        gameRunning = false;
+        initPanel();
+        solution = currentGame.returnSolution();
+        initBoard();
+        revalidate();
+        mainWindow.setResizable(false);
+        mainWindow.pack();
     }
 
     private ImageIcon getImageIcon(String val) {
