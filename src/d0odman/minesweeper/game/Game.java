@@ -7,6 +7,8 @@ package d0odman.minesweeper.game;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -17,8 +19,10 @@ import java.util.Random;
 public abstract class Game {
     // Minefield variables
     protected String[]    mines;
-    protected ArrayList<Integer>    leftMines,
-                                    rightMines;
+    protected ArrayList<Integer>    topMines,
+                                    leftMines,
+                                    rightMines,
+                                    bottomMines;
     protected int   trc,
                     blc,
                     brc;
@@ -26,17 +30,13 @@ public abstract class Game {
     protected boolean solved;
 
     public Game() {
-        setSolved(false);
+        solved = false;
         setEdgeMines();
         generateMines();
     }
 
     public String[] getMines() {
         return mines;
-    }
-
-    protected void setSolved(boolean b) {
-        solved = b;
     }
 
     protected void resetMines() {
@@ -46,11 +46,17 @@ public abstract class Game {
     // Method to set ArrayList variables associated with the mines on the edge
     //  of the game board
     private void setEdgeMines() {
+        topMines = new ArrayList<>();
         leftMines = new ArrayList<>();
         rightMines = new ArrayList<>();
+        bottomMines = new ArrayList<>();
         trc = getTRC() - 1;
         blc = getBLC() - 1;
         brc = getBRC() - 1;
+
+        for(int i = 1; i < trc; i++) {
+            topMines.add(i);
+        }
 
         for(int i = trc + 1; i < blc; i += trc + 1) {
             leftMines.add(i);
@@ -59,6 +65,19 @@ public abstract class Game {
         for(int i = trc + trc + 1; i < brc - trc; i += trc + 1) {
             rightMines.add(i);
         }
+
+        for(int i = blc + 1; i < brc; i++) {
+            bottomMines.add(i);
+        }
+
+        System.out.println(0);
+        System.out.println(topMines);
+        System.out.println(trc);
+        System.out.println(leftMines);
+        System.out.println(rightMines);
+        System.out.println(blc);
+        System.out.println(bottomMines);
+        System.out.println(brc);
     } // End setEdgeMines method
 
     private void generateMines() {
@@ -78,95 +97,104 @@ public abstract class Game {
         }
     }
 
+    public List<Integer> returnCheckMines(int tile) {
+        ArrayList<Integer> toReturn = new ArrayList<>();
+        boolean checked = false;
+
+        // Top left corner:  return 3 surrounding tiles
+        if(tile == 0) {
+            toReturn.add(tile + 1);
+            toReturn.add(tile + trc + 1);
+            toReturn.add(tile + trc + 2);
+            checked = true;
+        }
+
+        // Top edge mines:  return 5 surrounding tiles
+        if(topMines.contains(tile)) {
+            toReturn.add(tile - 1);
+            toReturn.add(tile + 1);
+            toReturn.add(tile + trc);
+            toReturn.add(tile + trc + 1);
+            toReturn.add(tile + trc + 2);
+            checked = true;
+        }
+
+        // Top right corner:  return 3 surrounding tiles
+        if(tile == trc) {
+            toReturn.add(tile - 1);
+            toReturn.add(tile + trc);
+            toReturn.add(tile + trc + 1);
+            checked = true;
+        }
+
+        // Left edge mines:  return 5 surrounding tiles
+        if(leftMines.contains(tile)) {
+            toReturn.add(tile - trc - 1);
+            toReturn.add(tile - trc);
+            toReturn.add(tile + 1);
+            toReturn.add(tile + trc + 1);
+            toReturn.add(tile + trc + 2);
+            checked = true;
+        }
+
+        // Bottom left corner:  return 3 surrounding tiles
+        if(tile == blc) {
+            toReturn.add(tile - trc - 1);
+            toReturn.add(tile - trc);
+            toReturn.add(tile + 1);
+            checked = true;
+        }
+
+        // Bottom edge mines:  return 5 surrounding tiles
+        if(bottomMines.contains(tile)) {
+            toReturn.add(tile - trc - 2);
+            toReturn.add(tile - trc - 1);
+            toReturn.add(tile - trc);
+            toReturn.add(tile - 1);
+            toReturn.add(tile + 1);
+            checked = true;
+        }
+
+        // Bottom right corner:  return 3 surrounding tiles
+        if(tile == brc) {
+            toReturn.add(tile - trc - 2);
+            toReturn.add(tile - trc - 1);
+            toReturn.add(tile - 1);
+            checked = true;
+        }
+
+        // Right edge mines:  return 5 surrounding tiles
+        if(rightMines.contains(tile)) {
+            toReturn.add(tile - trc - 2);
+            toReturn.add(tile - trc - 1);
+            toReturn.add(tile - 1);
+            toReturn.add(tile + trc);
+            toReturn.add(tile + trc + 1);
+            checked = true;
+        }
+
+        //  Everywhere else:  return 8 surrounding tiles
+        if(!checked) {
+            toReturn.add(tile - trc - 2);
+            toReturn.add(tile - trc - 1);
+            toReturn.add(tile - trc);
+            toReturn.add(tile - 1);
+            toReturn.add(tile + 1);
+            toReturn.add(tile + trc);
+            toReturn.add(tile + trc + 1);
+            toReturn.add(tile + trc + 2);
+        }
+
+        return Collections.unmodifiableList(toReturn);
+    }
+
     private void checkTile(int tile) {
         if(!"m".equals(mines[tile])) {
             int mineCounter = 0;
-            boolean checked = false;
-
-            // Top left corner:  check 3 surrounding tiles
-            if(tile == 0) {
-                if("m".equals(mines[tile + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc + 2])) mineCounter++;
-                checked = true;
+            List<Integer> toCheck = returnCheckMines(tile);
+            for(int i: toCheck) {
+                if("m".equals(mines[i])) mineCounter++;
             }
-
-            // Top edge mines:  check 5 surrounding tiles
-            if(tile > 0 && tile < trc) {
-                if("m".equals(mines[tile - 1])) mineCounter++;
-                if("m".equals(mines[tile + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc])) mineCounter++;
-                if("m".equals(mines[tile + trc + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc + 2])) mineCounter++;
-                checked = true;
-            }
-
-            // Top right corner:  check 3 surrounding tiles
-            if(tile == trc) {
-                if("m".equals(mines[tile - 1])) mineCounter++;
-                if("m".equals(mines[tile + trc])) mineCounter++;
-                if("m".equals(mines[tile + trc + 1])) mineCounter++;
-                checked = true;
-            }
-
-            // Left edge mines:  check 5 surrounding tiles
-            if(leftMines.contains(tile)) {
-                if("m".equals(mines[tile - trc - 1])) mineCounter++;
-                if("m".equals(mines[tile - trc])) mineCounter++;
-                if("m".equals(mines[tile + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc + 2])) mineCounter++;
-                checked = true;
-            }
-
-            // Bottom left corner:  check 3 surrounding tiles
-            if(tile == blc) {
-                if("m".equals(mines[tile - trc - 1])) mineCounter++;
-                if("m".equals(mines[tile - trc])) mineCounter++;
-                if("m".equals(mines[tile + 1])) mineCounter++;
-                checked = true;
-            }
-
-            // Bottom edge mines:  check 5 surrounding tiles
-            if(tile > blc && tile < brc) {
-                if("m".equals(mines[tile - trc - 2])) mineCounter++;
-                if("m".equals(mines[tile - trc - 1])) mineCounter++;
-                if("m".equals(mines[tile - trc])) mineCounter++;
-                if("m".equals(mines[tile - 1])) mineCounter++;
-                if("m".equals(mines[tile + 1])) mineCounter++;
-                checked = true;
-            }
-
-            // Bottom right corner:  check 3 surrounding tiles
-            if(tile == brc) {
-                if("m".equals(mines[tile - trc - 2])) mineCounter++;
-                if("m".equals(mines[tile - trc - 1])) mineCounter++;
-                if("m".equals(mines[tile - 1])) mineCounter++;
-                checked = true;
-            }
-
-            // Right edge mines:  check 5 surrounding tiles
-            if(rightMines.contains(tile)) {
-                if("m".equals(mines[tile - trc - 2])) mineCounter++;
-                if("m".equals(mines[tile - trc - 1])) mineCounter++;
-                if("m".equals(mines[tile - 1])) mineCounter++;
-                if("m".equals(mines[tile + trc])) mineCounter++;
-                if("m".equals(mines[tile + trc + 1])) mineCounter++;
-                checked = true;
-            }
-
-            //  Everywhere else:  check 8 surrounding tiles
-            if(!checked) {
-                if("m".equals(mines[tile - trc - 2])) mineCounter++;
-                if("m".equals(mines[tile - trc - 1])) mineCounter++;
-                if("m".equals(mines[tile - trc])) mineCounter++;
-                if("m".equals(mines[tile - 1])) mineCounter++;
-                if("m".equals(mines[tile + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc])) mineCounter++;
-                if("m".equals(mines[tile + trc + 1])) mineCounter++;
-                if("m".equals(mines[tile + trc + 2])) mineCounter++;
-            }
-
             mines[tile] = Integer.toString(mineCounter);
         }
     }

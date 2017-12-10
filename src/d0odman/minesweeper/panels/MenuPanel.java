@@ -8,7 +8,6 @@ package d0odman.minesweeper.panels;
 import d0odman.minesweeper.Minesweeper;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,16 +22,15 @@ public class MenuPanel extends JPanel {
     final private String[] gameDiff = {"Novice",
                                        "Intermediate",
                                        "Expert" };
-    final private MinePanel minePanel;
+    private MinePanel minePanel;
     final private BorderLayout layout;
     final private JComboBox<String> diff;
-    final private JLabel minesRem;
+    private JLabel minesRem;
     final private JLabel timer;
     private int timerDisp;
     final private Timer gameTimer;
 
-    public MenuPanel(MinePanel minePanel) {
-        this.minePanel = minePanel;
+    public MenuPanel() {
         layout = new BorderLayout();
         setBackground(Minesweeper.BACKGROUND);
         timer = new JLabel("0");
@@ -41,24 +39,28 @@ public class MenuPanel extends JPanel {
             timer.setText(Integer.toString(timerDisp));
         });
         add(timer, BorderLayout.WEST);
-        minesRem = new JLabel();
-        setMinesRem(this.minePanel.getUnflaggedMines());
-        add(minesRem, BorderLayout.CENTER);
         diff = new JComboBox<>(gameDiff);
         add(diff, BorderLayout.EAST);
         resetTimer();
     }
 
-    private void setMinesRem(int i) {
+    public void setMinePanel(MinePanel minePanel) {
+        this.minePanel = minePanel;
+        minesRem = new JLabel();
+        setMinesRem(this.minePanel.getUnflaggedMines());
+        add(minesRem, BorderLayout.CENTER);
+    }
+
+    public void setMinesRem(int i) {
        minesRem.setText(Integer.toString(i));
     }
 
-    private void resetTimer() {
+    public void resetTimer() {
         timerDisp = 0;
         gameTimer.start();
     }
-    
-    private void stopTimer() {
+
+    public void stopTimer() {
         gameTimer.stop();
     }
 }

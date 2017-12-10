@@ -20,7 +20,7 @@ public class Minesweeper extends JFrame {
     // Static variable declarations
     final public static Color BACKGROUND = new Color(0xE5, 0xE5, 0xE5);
     final private MinePanel minePanel = new MinePanel();
-    final private MenuPanel menuPanel = new MenuPanel(minePanel);
+    final private MenuPanel menuPanel = new MenuPanel();
     final private BorderLayout layout;
 
     public static void main(String[] args) {
@@ -33,11 +33,18 @@ public class Minesweeper extends JFrame {
 
     public Minesweeper() {
         layout = new BorderLayout();
+        minePanel.setMenuPanel(menuPanel);
+        menuPanel.setMinePanel(minePanel);
+        doSetup();
+    }
+
+    private void doSetup() {
         setLayout(layout);
         setBackground(BACKGROUND);
         getContentPane().add(menuPanel, BorderLayout.NORTH);
         getContentPane().add(minePanel, BorderLayout.CENTER);
         setResizable(false);
         pack();
+
     }
 }

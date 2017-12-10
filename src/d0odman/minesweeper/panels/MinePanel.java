@@ -14,6 +14,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -27,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 public class MinePanel extends JPanel {
     final private Game currentGame;
     final private GridLayout layout;
+    private MenuPanel menuPanel;
     private JButton[] mineField;
     private String[] mines;
     private int unflaggedMines;
@@ -53,6 +56,10 @@ public class MinePanel extends JPanel {
         initPanel();
         setTileIcons();
         initBoard();
+    }
+
+    public void setMenuPanel(MenuPanel menuPanel) {
+        this.menuPanel = menuPanel;
     }
 
     private void initPanel() {
@@ -167,34 +174,66 @@ public class MinePanel extends JPanel {
             add(tempButton);
         }
     }
-    
+
     private void doLeftClick(int buttonIndex) {
+        String state = (String) mineField[buttonIndex].getClientProperty("state");
         System.out.println("left click");
         System.out.println(buttonIndex);
+        if(!"flag".equals(state) && !"checked".equals(state)) {
+            String val = mines[buttonIndex];
+            if("m".equals(val)) {
+                endGame(buttonIndex);
+            } else {
+                mineField[buttonIndex].setDisabledIcon(getImageIcon(val));
+                mineField[buttonIndex].putClientProperty("state", "checked");
+                mineField[buttonIndex].setEnabled(false);
+                if("0".equals(val)) {
+                    List<Integer> toCheck = currentGame.returnCheckMines(buttonIndex);
+                    for(int i: toCheck) {
+                        doLeftClick(i);
+                        validateGame();
+                    }
+                }
+            }
+        }
     }
-    
+
     private void doRightClick(int buttonIndex) {
         String state = (String) mineField[buttonIndex].getClientProperty("state");
-        System.out.println("right click");
-        System.out.println(unflaggedMines);
-        System.out.println(buttonIndex);
         if ("initial".equals(state)) {
-            if(unflaggedMines != 1) {
+            if(unflaggedMines != 0) {
                 mineField[buttonIndex].putClientProperty("state", "flag");
                 mineField[buttonIndex].setIcon(flag);
             }
             unflaggedMines--;
-            if(unflaggedMines < 1) unflaggedMines = 1; 
+            if(unflaggedMines < 0) unflaggedMines = 0;
         } else {
-            int numMines = currentGame.getNumberOfMines();
-            if(unflaggedMines < numMines) {
-                mineField[buttonIndex].putClientProperty("state", "initial");
-                mineField[buttonIndex].setIcon(initial);
+            if(!"checked".equals(state)) {
+                int numMines = currentGame.getNumberOfMines();
+                if(unflaggedMines < numMines) {
+                    mineField[buttonIndex].putClientProperty("state", "initial");
+                    mineField[buttonIndex].setIcon(initial);
+                }
+                unflaggedMines++;
+                if(unflaggedMines > numMines) unflaggedMines = numMines;
             }
-            unflaggedMines++;
-            if(unflaggedMines > numMines) unflaggedMines = numMines;
         }
-        System.out.println(mineField[buttonIndex].getClientProperty("state"));
+            menuPanel.setMinesRem(unflaggedMines);
+    }
+
+    private void validateGame() {
+
+    }
+
+    private void endGame(int buttonIndex) {
+        removeAll();
+        for(int i = 0; i < mines.length; i++) {
+            JButton tempButton = new JButton(getImageIcon(mines[i]));
+            if(i == buttonIndex) tempButton.setIcon(exploded);
+            add(tempButton);
+        }
+        revalidate();
+        menuPanel.stopTimer();
     }
 
     private ImageIcon getImageIcon(String val) {
@@ -223,11 +262,11 @@ public class MinePanel extends JPanel {
         }
         return tempIcon;
     }
-    
+
     public int getNumMines() {
         return currentGame.getNumberOfMines();
     }
-    
+
     public int getUnflaggedMines() {
         return unflaggedMines;
     }
