@@ -8,7 +8,6 @@ package d0odman.minesweeper.panels;
 import d0odman.minesweeper.Minesweeper;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;

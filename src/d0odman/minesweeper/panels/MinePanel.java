@@ -14,12 +14,13 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -28,10 +29,11 @@ import javax.swing.border.EmptyBorder;
  */
 
 public class MinePanel extends JPanel {
-    private JFrame mainWindow;
+    final private JFrame mainWindow;
     final private GridLayout layout;
     private Game currentGame;
     private List<Integer> solution;
+    private ArrayList<Integer> runningSolution;
     private MenuPanel menuPanel;
     private JButton[] mineField;
     private String[] mines;
@@ -56,12 +58,12 @@ public class MinePanel extends JPanel {
         this.mainWindow = mainWindow;
         layout = new GridLayout();
         setTileIcons();
-        newGame();
-        initPanel();
     }
 
     public void setMenuPanel(MenuPanel menuPanel) {
         this.menuPanel = menuPanel;
+        newGame();
+        initPanel();
     }
 
     private void initPanel() {
@@ -209,13 +211,15 @@ public class MinePanel extends JPanel {
     private void doRightClick(int buttonIndex) {
         if(!gameRunning) {
             gameRunning = true;
-            menuPanel.resetTimer();
+            menuPanel.stopTimer();
         }
         String state = (String) mineField[buttonIndex].getClientProperty("state");
         if ("initial".equals(state)) {
             if(unflaggedMines != 0) {
                 mineField[buttonIndex].putClientProperty("state", "flag");
                 mineField[buttonIndex].setIcon(flag);
+                runningSolution.add(buttonIndex);
+                Collections.sort(runningSolution);
             }
             unflaggedMines--;
             if(unflaggedMines < 0) unflaggedMines = 0;
@@ -225,6 +229,7 @@ public class MinePanel extends JPanel {
                 if(unflaggedMines < numMines) {
                     mineField[buttonIndex].putClientProperty("state", "initial");
                     mineField[buttonIndex].setIcon(initial);
+                    runningSolution.remove(new Integer(buttonIndex));
                 }
                 unflaggedMines++;
                 if(unflaggedMines > numMines) unflaggedMines = numMines;
@@ -234,8 +239,18 @@ public class MinePanel extends JPanel {
     }
 
     private void validateGame() {
-        for(JButton button: mineField) {
-            System.out.println(button.getClientProperty("state"));
+        int len = mineField.length,
+            numMines = currentGame.getNumberOfMines();
+        
+        System.out.println(len);
+        System.out.println(numMines);
+        System.out.println(len - numMines);
+        
+        if(runningSolution.size() == solution.size()) {
+            if(runningSolution.equals(solution)) {
+                for(JButton button: mineField) {
+                }
+            }
         }
     }
 
@@ -257,6 +272,7 @@ public class MinePanel extends JPanel {
     
     public void newGame(String difficulty) {
         mainWindow.setResizable(true);
+        menuPanel.resetTimer();
         removeAll();
         switch(difficulty) {
             case "Intermediate": currentGame = new Intermediate();
