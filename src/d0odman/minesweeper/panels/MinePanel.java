@@ -139,7 +139,7 @@ public class MinePanel extends JPanel {
 
     private void initBoard() {
         mines = currentGame.getMines();
-        mineField = new JButton[mines.length + 1];
+        mineField = new JButton[mines.length];
         unflaggedMines = currentGame.getNumberOfMines();
         for(int i = 0; i < mines.length; i++) {
             JButton tempButton = new JButton(initial);
@@ -201,11 +201,11 @@ public class MinePanel extends JPanel {
                     List<Integer> toCheck = currentGame.returnCheckMines(buttonIndex);
                     for(int i: toCheck) {
                         doLeftClick(i);
-                        validateGame();
                     }
                 }
             }
         }
+        validateGame();
     }
 
     private void doRightClick(int buttonIndex) {
@@ -219,9 +219,12 @@ public class MinePanel extends JPanel {
             if(unflaggedMines != 0) {
                 mineField[buttonIndex].putClientProperty("state", "flag");
                 mineField[buttonIndex].setIcon(flag);
+
+                System.out.println("adding " + Integer.toString(buttonIndex));
                 if(!runningSolution.contains(buttonIndex)) {
                     runningSolution.add(buttonIndex);
                     Collections.sort(runningSolution);
+                    System.out.println(runningSolution);
                 }
             }
             unflaggedMines--;
@@ -229,13 +232,13 @@ public class MinePanel extends JPanel {
         } else {
             if(!"checked".equals(state)) {
                 int numMines = currentGame.getNumberOfMines();
-                if(unflaggedMines < numMines) {
-                    mineField[buttonIndex].putClientProperty("state", "initial");
-                    mineField[buttonIndex].setIcon(initial);
-                    if(runningSolution.contains(buttonIndex)) {
-                        runningSolution.remove(new Integer(buttonIndex));
-                    }
-                }
+
+                System.out.println("removing " + Integer.toString(buttonIndex));
+                runningSolution.remove(new Integer(buttonIndex));
+                System.out.println(runningSolution);
+
+                mineField[buttonIndex].putClientProperty("state", "initial");
+                mineField[buttonIndex].setIcon(initial);
                 unflaggedMines++;
                 if(unflaggedMines > numMines) unflaggedMines = numMines;
             }
@@ -259,11 +262,10 @@ public class MinePanel extends JPanel {
                     numMines = currentGame.getNumberOfMines();
                 ArrayList<String> tester = new ArrayList<>();
                 for(JButton button: mineField) {
-                    System.out.println(button);
-//                    String state = (String) button.getClientProperty("state");
-//                    if("checked".equals(state)) {
-//                        tester.add(state);
-//                    }
+                    String state = (String) button.getClientProperty("state");
+                    if("checked".equals(state)) {
+                        tester.add(state);
+                    }
                 }
                 if(tester.size() == (len - numMines)) winGame();
             }
