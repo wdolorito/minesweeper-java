@@ -91,7 +91,7 @@ public abstract class Game {
             checkTile(i);
         }
     }
-    
+
     public List<Integer> returnSolution() {
         return Collections.unmodifiableList(solution);
     }

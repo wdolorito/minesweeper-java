@@ -32,24 +32,27 @@ public class MenuPanel extends JPanel {
 
     public MenuPanel() {
         layout = new BorderLayout();
-        setBackground(Minesweeper.BACKGROUND);
         timer = new JLabel("0");
         gameTimer = new Timer(1000, (ActionEvent e) -> {
             timerDisp++;
             timer.setText(Integer.toString(timerDisp));
         });
-        add(timer, BorderLayout.WEST);
         diff = new JComboBox<>(gameDiff);
         diff.addActionListener((ActionEvent e) -> {
             JComboBox box = (JComboBox) e.getSource();
             restartGame((String) box.getSelectedItem());
         });
+        doSetup();
+    }
+
+    private void doSetup() {
+        setBackground(Minesweeper.BACKGROUND);
+        add(timer, BorderLayout.WEST);
         add(diff, BorderLayout.EAST);
     }
-    
+
     private void restartGame(String difficulty) {
         minePanel.newGame(difficulty);
-        System.out.println(difficulty);
     }
 
     public void setMinePanel(MinePanel minePanel) {
@@ -65,6 +68,10 @@ public class MenuPanel extends JPanel {
 
     public void resetTimer() {
         timerDisp = 0;
+        timer.setText("0");
+    }
+
+    public void startTimer() {
         gameTimer.start();
     }
 

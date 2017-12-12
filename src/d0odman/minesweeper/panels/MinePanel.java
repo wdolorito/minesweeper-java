@@ -62,6 +62,7 @@ public class MinePanel extends JPanel {
 
     public void setMenuPanel(MenuPanel menuPanel) {
         this.menuPanel = menuPanel;
+        runningSolution = new ArrayList<>();
         newGame();
         initPanel();
     }
@@ -185,10 +186,9 @@ public class MinePanel extends JPanel {
         if(!gameRunning) {
             gameRunning = true;
             menuPanel.resetTimer();
+            menuPanel.startTimer();
         }
         String state = (String) mineField[buttonIndex].getClientProperty("state");
-        System.out.println("left click");
-        System.out.println(buttonIndex);
         if(!"flag".equals(state) && !"checked".equals(state)) {
             String val = mines[buttonIndex];
             if("m".equals(val)) {
@@ -211,15 +211,18 @@ public class MinePanel extends JPanel {
     private void doRightClick(int buttonIndex) {
         if(!gameRunning) {
             gameRunning = true;
-            menuPanel.stopTimer();
+            menuPanel.resetTimer();
+            menuPanel.startTimer();
         }
         String state = (String) mineField[buttonIndex].getClientProperty("state");
         if ("initial".equals(state)) {
             if(unflaggedMines != 0) {
                 mineField[buttonIndex].putClientProperty("state", "flag");
                 mineField[buttonIndex].setIcon(flag);
-                runningSolution.add(buttonIndex);
-                Collections.sort(runningSolution);
+                if(!runningSolution.contains(buttonIndex)) {
+                    runningSolution.add(buttonIndex);
+                    Collections.sort(runningSolution);
+                }
             }
             unflaggedMines--;
             if(unflaggedMines < 0) unflaggedMines = 0;
@@ -229,27 +232,40 @@ public class MinePanel extends JPanel {
                 if(unflaggedMines < numMines) {
                     mineField[buttonIndex].putClientProperty("state", "initial");
                     mineField[buttonIndex].setIcon(initial);
-                    runningSolution.remove(new Integer(buttonIndex));
+                    if(runningSolution.contains(buttonIndex)) {
+                        runningSolution.remove(new Integer(buttonIndex));
+                    }
                 }
                 unflaggedMines++;
                 if(unflaggedMines > numMines) unflaggedMines = numMines;
             }
         }
-            menuPanel.setMinesRem(unflaggedMines);
+
+        menuPanel.setMinesRem(unflaggedMines);
+        validateGame();
     }
 
     private void validateGame() {
-        int len = mineField.length,
-            numMines = currentGame.getNumberOfMines();
-        
-        System.out.println(len);
-        System.out.println(numMines);
-        System.out.println(len - numMines);
-        
+        System.out.println("validating game");
+        System.out.println(runningSolution.size());
+        System.out.println(runningSolution);
+        System.out.println(solution.size());
+        System.out.println(solution);
         if(runningSolution.size() == solution.size()) {
+            System.out.println("solutions right size");
             if(runningSolution.equals(solution)) {
+                System.out.println("solutions same");
+                int len = mineField.length,
+                    numMines = currentGame.getNumberOfMines();
+                ArrayList<String> tester = new ArrayList<>();
                 for(JButton button: mineField) {
+                    System.out.println(button);
+//                    String state = (String) button.getClientProperty("state");
+//                    if("checked".equals(state)) {
+//                        tester.add(state);
+//                    }
                 }
+                if(tester.size() == (len - numMines)) winGame();
             }
         }
     }
@@ -265,13 +281,25 @@ public class MinePanel extends JPanel {
         gameRunning = false;
         menuPanel.stopTimer();
     }
-    
+
+    private void winGame() {
+        removeAll();
+        for(String mine : mines) {
+            JButton tempButton = new JButton(getImageIcon(mine));
+            add(tempButton);
+        }
+        revalidate();
+        gameRunning = false;
+        menuPanel.stopTimer();
+    }
+
     private void newGame() {
         newGame("Novice");
     }
-    
+
     public void newGame(String difficulty) {
         mainWindow.setResizable(true);
+        menuPanel.stopTimer();
         menuPanel.resetTimer();
         removeAll();
         switch(difficulty) {
