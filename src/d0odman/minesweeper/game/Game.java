@@ -209,9 +209,7 @@ public abstract class Game {
         if(!"m".equals(mines[tile])) {
             int mineCounter = 0;
             List<Integer> toCheck = returnCheckMines(tile);
-            for(int i: toCheck) {
-                if("m".equals(mines[i])) mineCounter++;
-            }
+            mineCounter = toCheck.stream().filter((i) -> ("m".equals(mines[i]))).map((_item) -> 1).reduce(mineCounter, Integer::sum);
             mines[tile] = Integer.toString(mineCounter);
         }
     }

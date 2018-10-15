@@ -98,7 +98,7 @@ public class MinePanel extends JPanel {
         setTileIcons("set1/");
     }
 
-    private void setTileIcons(String setName) {
+    protected void setTileIcons(String setName) {
         String path = "images/" + setName;
 
         initial = new ImageIcon(path + "default.png");
@@ -152,7 +152,7 @@ public class MinePanel extends JPanel {
         exploded = new ImageIcon(path + "exploded.png");
         exploded = new ImageIcon(exploded
                 .getImage()
-                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+                .getScaledInstance(20, 20, Image.SCALE_SMOOTH)); 
     }
 
     private void initBoard() {
@@ -217,9 +217,9 @@ public class MinePanel extends JPanel {
                 mineField[buttonIndex].setEnabled(false);
                 if("0".equals(val)) {
                     List<Integer> toCheck = currentGame.returnCheckMines(buttonIndex);
-                    for(int i: toCheck) {
+                    toCheck.forEach((i) -> {
                         doLeftClick(i);
-                    }
+                    });
                 }
             }
         }

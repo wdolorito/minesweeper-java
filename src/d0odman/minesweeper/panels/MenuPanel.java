@@ -40,9 +40,12 @@ public class MenuPanel extends JPanel {
     final private String[] gameDiff = {"Novice",
                                        "Intermediate",
                                        "Expert" };
+    final private String[] tileSets = {"set1",
+                                       "set2" };
     private MinePanel minePanel;
     final private BorderLayout layout;
     final private JComboBox<String> diff;
+    final private JComboBox<String> sets;
     private JLabel minesRem;
     final private JLabel timer;
     private int timerDisp;
@@ -60,6 +63,11 @@ public class MenuPanel extends JPanel {
             JComboBox box = (JComboBox) e.getSource();
             restartGame((String) box.getSelectedItem());
         });
+        sets = new JComboBox<>(tileSets);
+        sets.addActionListener((ActionEvent e) -> {
+            JComboBox box = (JComboBox) e.getSource();
+            minePanel.setTileIcons((String) box.getSelectedItem());
+        });
         doSetup();
     }
 
@@ -67,6 +75,7 @@ public class MenuPanel extends JPanel {
         setBackground(Minesweeper.BACKGROUND);
         add(timer, BorderLayout.WEST);
         add(diff, BorderLayout.EAST);
+        add(sets, BorderLayout.SOUTH);
     }
 
     private void restartGame(String difficulty) {
