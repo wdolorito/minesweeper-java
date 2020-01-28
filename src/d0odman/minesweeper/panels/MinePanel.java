@@ -30,8 +30,10 @@ import d0odman.minesweeper.game.Intermediate;
 import d0odman.minesweeper.game.Expert;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,19 +60,19 @@ public class MinePanel extends JPanel {
     private int unflaggedMines;
     private boolean gameRunning;
 
-    private ImageIcon   initial,
-                        empty,
-                        one,
-                        two,
-                        three,
-                        four,
-                        five,
-                        six,
-                        seven,
-                        eigth,
-                        flag,
-                        bomb,
-                        exploded;
+    private ImageIcon initial,
+                      empty,
+                      one,
+                      two,
+                      three,
+                      four,
+                      five,
+                      six,
+                      seven,
+                      eigth,
+                      flag,
+                      bomb,
+                      exploded;
 
     public MinePanel(JFrame mainWindow) {
         this.mainWindow = mainWindow;
@@ -99,57 +101,95 @@ public class MinePanel extends JPanel {
     }
 
     protected void setTileIcons(String setName) {
-        String path = "images/" + setName;
+        String path = "/images/" + setName;
 
-        initial = new ImageIcon(path + "default.png");
+        URL imageurl = getClass().getResource(path + "default.png");
+        Image temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        initial = new ImageIcon(temp);
         initial = new ImageIcon(initial
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        empty = new ImageIcon(path + "empty.png");
+
+        imageurl = getClass().getResource(path + "empty.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        empty = new ImageIcon(temp);
         empty = new ImageIcon(empty
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        one = new ImageIcon(path + "1.png");
+
+        imageurl = getClass().getResource(path + "1.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        one = new ImageIcon(temp);
         one = new ImageIcon(one
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        two = new ImageIcon(path + "2.png");
+
+        imageurl = getClass().getResource(path + "2.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        two = new ImageIcon(temp);
         two = new ImageIcon(two
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        three = new ImageIcon(path + "3.png");
+
+        imageurl = getClass().getResource(path + "3.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        three = new ImageIcon(temp);
         three = new ImageIcon(three
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        four = new ImageIcon(path + "4.png");
+
+        imageurl = getClass().getResource(path + "4.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        four = new ImageIcon(temp);
         four = new ImageIcon(four
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        five = new ImageIcon(path + "5.png");
+
+        imageurl = getClass().getResource(path + "5.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        five = new ImageIcon(temp);
         five = new ImageIcon(five
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        six = new ImageIcon(path + "6.png");
+
+        imageurl = getClass().getResource(path + "6.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        six = new ImageIcon(temp);
         six = new ImageIcon(six
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        seven = new ImageIcon(path + "7.png");
+
+        imageurl = getClass().getResource(path + "7.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        seven = new ImageIcon(temp);
         seven = new ImageIcon(seven
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        eigth = new ImageIcon(path + "8.png");
+
+        imageurl = getClass().getResource(path + "8.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        eigth = new ImageIcon(temp);
         eigth = new ImageIcon(eigth
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        flag = new ImageIcon(path + "flag.png");
+
+        imageurl = getClass().getResource(path + "flag.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        flag = new ImageIcon(temp);
         flag = new ImageIcon(flag
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        bomb = new ImageIcon(path + "bomb.png");
+
+        imageurl = getClass().getResource(path + "bomb.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        bomb = new ImageIcon(temp);
         bomb = new ImageIcon(bomb
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-        exploded = new ImageIcon(path + "exploded.png");
+
+        imageurl = getClass().getResource(path + "exploded.png");
+        temp = Toolkit.getDefaultToolkit().getImage(imageurl);
+        exploded = new ImageIcon(temp);
         exploded = new ImageIcon(exploded
                 .getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH)); 
