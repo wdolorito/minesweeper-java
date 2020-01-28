@@ -36,15 +36,15 @@ import java.util.Random;
 
 public abstract class Game {
     // Minefield variables
-    protected String[]    mines;
-    protected ArrayList<Integer>    topMines,
-                                    leftMines,
-                                    rightMines,
-                                    bottomMines,
-                                    solution;
-    protected int   trc,
-                    blc,
-                    brc;
+    protected String[] mines;
+    protected ArrayList<Integer> topMines,
+                                 leftMines,
+                                 rightMines,
+                                 bottomMines,
+                                 solution;
+    protected int trc,
+                  blc,
+                  brc;
 
     protected boolean solved;
 

@@ -252,7 +252,7 @@ public class MinePanel extends JPanel {
                 int numMines = currentGame.getNumberOfMines();
 
                 System.out.println("removing " + Integer.toString(buttonIndex));
-                runningSolution.remove(new Integer(buttonIndex));
+                runningSolution.remove(Integer.valueOf(buttonIndex));
                 System.out.println(runningSolution);
 
                 mineField[buttonIndex].putClientProperty("state", "initial");

@@ -31,11 +31,11 @@ import java.awt.Dimension;
  */
 
 public class Novice extends Game {
-    static final int    MINES = 10,
-                        TRC = 9,
-                        ROWS = TRC,
-                        BRC = TRC * ROWS,
-                        BLC = BRC - TRC + 1;
+    static final int MINES = 10,
+                     TRC = 9,
+                     ROWS = TRC,
+                     BRC = TRC * ROWS,
+                     BLC = BRC - TRC + 1;
 
     static final Dimension BOARD = new Dimension(TRC * 20 + 60, ROWS * 20 + 60);
 

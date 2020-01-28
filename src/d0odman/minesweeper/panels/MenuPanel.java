@@ -30,6 +30,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -73,6 +74,7 @@ public class MenuPanel extends JPanel {
 
     private void doSetup() {
         setBackground(Minesweeper.BACKGROUND);
+        setBorder(new EmptyBorder(30, 30, 0, 30));
         add(timer, BorderLayout.WEST);
         add(diff, BorderLayout.EAST);
         add(sets, BorderLayout.SOUTH);
