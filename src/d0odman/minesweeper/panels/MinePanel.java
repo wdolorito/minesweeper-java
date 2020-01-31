@@ -40,6 +40,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -97,10 +98,10 @@ public class MinePanel extends JPanel {
     }
 
     private void setTileIcons() {
-        setTileIcons("set1/");
+        setTileIcons("set1/", true);
     }
 
-    protected void setTileIcons(String setName) {
+    protected void setTileIcons(String setName, boolean firstRun) {
         String path = "/images/" + setName;
 
         URL imageurl = getClass().getResource(path + "default.png");
@@ -192,7 +193,9 @@ public class MinePanel extends JPanel {
         exploded = new ImageIcon(temp);
         exploded = new ImageIcon(exploded
                 .getImage()
-                .getScaledInstance(20, 20, Image.SCALE_SMOOTH)); 
+                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+        
+        if(!firstRun) updateTiles();
     }
 
     private void initBoard() {
@@ -238,6 +241,24 @@ public class MinePanel extends JPanel {
             mineField[i] = tempButton;
             add(tempButton);
         }
+    }
+    
+    private void updateTiles() {
+        int size = mines.length;
+        for(int i = 0; i < size; i++) {
+            String state = (String) mineField[i].getClientProperty("state");
+            if("flag".equals(state)) {
+                mineField[i].setIcon(flag);
+                mineField[i].setDisabledIcon(flag);
+            } else if(!mineField[i].isEnabled()) {
+                mineField[i].setIcon(getImageIcon(mines[i]));
+                mineField[i].setDisabledIcon(getImageIcon(mines[i]));
+            } else {
+                mineField[i].setIcon(initial);
+                mineField[i].setDisabledIcon(initial);
+            }
+        }
+        revalidate();
     }
 
     private void doLeftClick(int buttonIndex) {
@@ -332,7 +353,8 @@ public class MinePanel extends JPanel {
 
     private void endGame(int buttonIndex) {
         removeAll();
-        for(int i = 0; i < mines.length; i++) {
+        int size = mines.length;
+        for(int i = 0; i < size; i++) {
             JButton tempButton = new JButton(getImageIcon(mines[i]));
             if(i == buttonIndex) tempButton.setIcon(exploded);
             add(tempButton);
@@ -340,6 +362,8 @@ public class MinePanel extends JPanel {
         revalidate();
         gameRunning = false;
         menuPanel.stopTimer();
+        String msg = "You lost! :( " + menuPanel.getTimer();
+        showMessage(msg);
     }
 
     private void winGame() {
@@ -351,6 +375,13 @@ public class MinePanel extends JPanel {
         revalidate();
         gameRunning = false;
         menuPanel.stopTimer();
+        String msg = "You won! :) " + menuPanel.getTimer();
+        showMessage(msg);
+    }
+    
+    private void showMessage(String msg) {
+        JFrame f = new JFrame();
+        JOptionPane.showMessageDialog(f, msg, "", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void newGame() {

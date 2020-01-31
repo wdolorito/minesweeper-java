@@ -67,7 +67,7 @@ public class MenuPanel extends JPanel {
         sets = new JComboBox<>(tileSets);
         sets.addActionListener((ActionEvent e) -> {
             JComboBox box = (JComboBox) e.getSource();
-            minePanel.setTileIcons((String) box.getSelectedItem());
+            minePanel.setTileIcons((String) box.getSelectedItem() + "/", false);
         });
         doSetup();
     }
@@ -106,5 +106,9 @@ public class MenuPanel extends JPanel {
 
     public void stopTimer() {
         gameTimer.stop();
+    }
+    
+    public String getTimer() {
+        return timer.getText();
     }
 }
